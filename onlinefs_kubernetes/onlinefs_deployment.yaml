@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: onlinefs-deployment
+  namespace: hopsworks
+  labels:
+    app: onlinefs
+spec:
+  minReadySeconds: 0
+  replicas: 1
+  selector:
+    matchLabels:
+      app: onlinefs
+  template:
+    metadata:
+      labels:
+        app: onlinefs
+    spec:
+      containers:
+      - name: onlinefs
+        image: registry.service.consul:4443/onlinefs:1.8-SNAPSHOT
+        resources:
+          requests:
+            memory: "1024Mi"
+          limits:
+            memory: "4096Mi"
+            cpu: "1"
+        ports:
+          - containerPort: 12800
+            name: monitor
+          - containerPort: 9029
+            name: debug
+        env:
+          - name: ONLINEFS_HOME
+            value: "/onlinefs"
+          - name: JAVA_OPTS
+            valueFrom:
+              configMapKeyRef:
+                name: onlinefs-configmap
+                key: java_opts
+        volumeMounts:
+          - name: config
+            mountPath: "/onlinefs/etc"
+            readOnly: true
+          - name: secret
+            mountPath: "/certs"
+            readOnly: true
+          - name: onlinefs-volume
+            mountPath: /onlinefs
+      volumes:
+      - name: config
+        configMap:
+          name: onlinefs-configmap
+          items:
+          - key: "log4j.properties"
+            path: "log4j.properties"
+          - key: "onlinefs-kafka.properties"
+            path: "onlinefs-kafka.properties"
+          - key: "onlinefs-site.xml"
+            path: "onlinefs-site.xml"
+      - name: secret
+        secret:
+          secretName: onlinefs-secret
+      - name: onlinefs-volume
+        hostPath:
+          path: /srv/hops/onlinefs
+          type: DirectoryOrCreate # used for logging and storing hopsworks token (so should be fine to create locally)
+          

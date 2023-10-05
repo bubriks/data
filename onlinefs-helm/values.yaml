@@ -1,0 +1,23 @@
+namespace: hopsworks
+appName: onlinefs
+
+configmap:
+  name: onlinefs-configmap
+
+secret:
+  name: onlinefs-secret
+
+deployment:
+  name: onlinefs-deployment
+  replicas: 1
+
+  image:
+    name: registry.service.consul:4443/onlinefs
+    tag: 1.8-SNAPSHOT
+
+service:
+  monitoring:
+    name: onlinefs-monitor
+
+  debug:
+    name: onlinefs-debug

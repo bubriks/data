@@ -1,0 +1,4 @@
+app {{ .Values.appName }} uses namespace {{ .Values.namespace }}
+
+Make sure to create:
+kubectl -n {{ .Values.namespace }} create secret generic {{ .Values.secret.name }} --from-file=onlinefs__kstore.jks=/srv/hops/super_crypto/onlinefs/onlinefs__kstore.jks --from-file=onlinefs__tstore.jks=/srv/hops/super_crypto/onlinefs/onlinefs__tstore.jks

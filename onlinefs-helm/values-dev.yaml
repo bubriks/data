@@ -1,0 +1,7 @@
+namespace: hopsworks-dev
+
+debug: true
+
+deployment:
+  env:
+    JAVA_OPTS: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:9029

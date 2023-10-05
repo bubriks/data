@@ -1,0 +1,17 @@
+{{ if .Values.debug }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.debug.name }}
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: {{ .Values.appName }}
+  ports:
+  - protocol: TCP
+    name: debug
+    port: 9029
+    targetPort: debug
+    nodePort: 30000 # The range of valid ports is 30000-32767
+  type: LoadBalancer
+{{ end }}

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: onlinefs-debug
+  namespace: hopsworks
+spec:
+  selector:
+    app: onlinefs
+  ports:
+  - protocol: TCP
+    name: debug
+    port: 9029
+    targetPort: debug
+    nodePort: 30000 # The range of valid ports is 30000-32767
+  type: LoadBalancer
